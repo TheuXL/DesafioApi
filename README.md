@@ -504,20 +504,41 @@ erDiagram
 
 ## Como executar
 
-**Maven (Windows):**
+### Pré-requisitos
+
+| O que | Obrigatório? | Observação |
+|--------|--------------|------------|
+| **JDK 17** | Sim | Instale um JDK 17 (Temurin, Oracle, etc.) e configure `JAVA_HOME` apontando para ele. Confira com `java -version`. |
+| **Maven instalado** | Não | O projeto inclui **Maven Wrapper** (`mvnw` / `mvnw.cmd`): na primeira execução ele pode baixar o Maven e, em seguida, baixa as dependências do `pom.xml` sozinho. |
+
+**Windows (PowerShell ou CMD):**
 
 ```bash
 .\mvnw.cmd spring-boot:run
 ```
 
-**JAR:**
+**Linux / macOS:**
+
+```bash
+./mvnw spring-boot:run
+```
+
+Quando aparecer que o Tomcat subiu na porta **8080**, a API está no ar. Base URL: `http://localhost:8080`.
+
+### Gerar JAR e executar sem Maven “ao vivo”
+
+Útil para deploy simples ou para depois copiar o JAR:
 
 ```bash
 .\mvnw.cmd clean package -DskipTests
 java -jar target\produtos-api-0.0.1-SNAPSHOT.jar
 ```
 
-**Docker:**
+O `package` compila, roda testes (a menos que use `-DskipTests`) e gera o JAR executável em `target\`.
+
+### Docker
+
+Exige **Docker Desktop** (ou engine) instalado. Na raiz do projeto, após gerar o JAR:
 
 ```bash
 .\mvnw.cmd clean package -DskipTests
@@ -525,13 +546,15 @@ docker build -t produtos-api .
 docker run -p 8080:8080 produtos-api
 ```
 
-Base URL padrão: `http://localhost:8080`
+A imagem usa o JAR em `target\`; por isso o `package` precisa ter sido executado antes do `docker build`.
 
-**Testes:**
+### Testes
 
 ```bash
 .\mvnw.cmd test
 ```
+
+Executa os testes unitários (por exemplo `ProdutoServiceTest`) e o teste de contexto Spring.
 
 ---
 
