@@ -94,7 +94,7 @@ graph LR
 
 ---
 
-## O que cada arquivo faz (com trechos do código)
+## O que cada arquivo faz 
 
 ### `ProdutosApiApplication.java`
 
@@ -476,7 +476,7 @@ Fluxo resumido do CRUD autenticado:
 
 ```mermaid
 graph TD
-    A[Cliente com Bearer] --> B[/api/produtos]
+    A[Cliente com Bearer] --> B["/api/produtos"]
     B --> C[ProdutoController]
     C --> D[ProdutoService]
     D --> E[ProdutoRepository]
@@ -507,7 +507,6 @@ erDiagram
 **Maven (Windows):**
 
 ```bash
-cd C:\Projetos\produtos-api
 .\mvnw.cmd spring-boot:run
 ```
 
