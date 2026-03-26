@@ -487,6 +487,136 @@ graph TD
 
 ---
 
+## Testes rápidos com `curl`
+
+Pré-requisitos:
+- A API deve estar rodando em `http://localhost:8080`
+- Para as rotas `/api/produtos`, envie `Authorization: Bearer <token>`
+
+### 1) Login para obter o JWT
+
+```bash
+curl -s -X POST "http://localhost:8080/auth/login" -H "Content-Type: application/json" -d "{\"email\":\"admin@exemplo.com\",\"senha\":\"admin123\"}"
+```
+
+Retorno esperado:
+
+```json
+{"token":"<JWT_GERADO>"}
+```
+
+Se as credenciais estiverem erradas:
+
+Retorno (status `401`):
+
+```text
+Credenciais invalidas
+```
+
+### 2) Criar um produto (`POST /api/produtos`)
+
+Substitua `SEU_TOKEN` pelo token obtido no login:
+
+```bash
+curl -s -X POST "http://localhost:8080/api/produtos" -H "Content-Type: application/json" -H "Authorization: Bearer SEU_TOKEN" -d "{\"nome\":\"Notebook\",\"preco\":3000.0,\"descricao\":\"i5\",\"categoria\":\"Informatica\"}"
+```
+
+Retorno esperado (status `200`):
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook",
+  "preco": 3000.0,
+  "descricao": "i5",
+  "categoria": "Informatica"
+}
+```
+
+### 3) Listar produtos (`GET /api/produtos`)
+
+```bash
+curl -s -X GET "http://localhost:8080/api/produtos" -H "Authorization: Bearer SEU_TOKEN"
+```
+
+Retorno esperado:
+
+```json
+[
+  {
+    "id": 1,
+    "nome": "Notebook",
+    "preco": 3000.0,
+    "descricao": "i5",
+    "categoria": "Informatica"
+  }
+]
+```
+
+### 4) Buscar por id (`GET /api/produtos/{id}`)
+
+```bash
+curl -s -X GET "http://localhost:8080/api/produtos/1" -H "Authorization: Bearer SEU_TOKEN"
+```
+
+Retorno esperado:
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook",
+  "preco": 3000.0,
+  "descricao": "i5",
+  "categoria": "Informatica"
+}
+```
+
+### 5) Atualizar (`PUT /api/produtos/{id}`)
+
+```bash
+curl -s -X PUT "http://localhost:8080/api/produtos/1" -H "Content-Type: application/json" -H "Authorization: Bearer SEU_TOKEN" -d "{\"nome\":\"Notebook Pro\",\"preco\":3500.0,\"descricao\":\"i7\",\"categoria\":\"Informatica\"}"
+```
+
+Retorno esperado (status `200`):
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook Pro",
+  "preco": 3500.0,
+  "descricao": "i7",
+  "categoria": "Informatica"
+}
+```
+
+### 6) Remover (`DELETE /api/produtos/{id}`)
+
+```bash
+curl -i -X DELETE "http://localhost:8080/api/produtos/1" -H "Authorization: Bearer SEU_TOKEN"
+```
+
+Retorno esperado:
+- Status `204 No Content`
+- Corpo vazio
+
+### 7) Produto inexistente (404 + `RestExceptionHandler`)
+
+```bash
+curl -s -X GET "http://localhost:8080/api/produtos/9999" -H "Authorization: Bearer SEU_TOKEN"
+```
+
+Retorno esperado (status `404`):
+
+```json
+{
+  "timestamp": "2026-03-26T12:34:56.789",
+  "status": 404,
+  "error": null
+}
+```
+
+---
+
 ## Modelo de dados (JPA)
 
 ```mermaid
